@@ -6955,8 +6955,21 @@ span.idx-dots { flex: 1; border-bottom: 1px dotted #b9b0a0; margin: 0 6px; heigh
       if (d.data.children.some(function(c){ return c._linkId === linkId; })) {
         return; // xa engadida: só hai que despregar o nodo pai
       }
-      var sourceNode = (r.path && findByPath(targetFamily, r.path)) || targetFamily;
-      var cloned = deepCloneLinked(sourceNode, r.roman);
+      var cloned;
+      var sourceNode = r.path && findByPath(targetFamily, r.path);
+      if (sourceNode) {
+        // temos a posición exacta: engadimos ese membro (e os seus descendentes)
+        cloned = deepCloneLinked(sourceNode, r.roman);
+      } else {
+        // non hai posición exacta: amosamos só unha referencia á familia,
+        // sen arrastrar toda a súa xenealoxía coma se partise do seu inicio
+        cloned = {
+          id: targetFamily.id, name: targetFamily.name, spouse: targetFamily.spouse,
+          note: 'Membro exacto non especificado nos rexistros orixinais (só se cita a familia ' + r.roman + ')',
+          refs: [], children: [],
+          _linked: true, _linkFrom: r.roman
+        };
+      }
       cloned._linkId = linkId;
       d.data.children.push(cloned);
       rebuildFromData(linkId);
