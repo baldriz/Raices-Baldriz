@@ -166,6 +166,13 @@
     color:#7a7156;
     margin-top:1px;
   }
+  .suggestions .sparents{
+    display:block;
+    font-size:.76rem;
+    color:var(--brass-gold);
+    font-style:italic;
+    margin-top:1px;
+  }
   .suggestions .empty{padding:10px 12px; font-size:.85rem; color:#7a7156; font-style:italic;}
 
   .swap-row{
@@ -343,7 +350,19 @@ const BALDRIZ_DATA = {"persons":{"I.1":{"n":"Marcos Moráis","f":"I","nt":""},"I
   function labelFor(id){
     const p = persons[id];
     const famLabel = families[p.f] || p.f;
-    return { name: p.n, tronco: 'Tronco ' + p.f + ': ' + famLabel };
+    const parentIds = parentsMap[id] || [];
+    const parentNames = parentIds.map(pid => (persons[pid] || {}).n).filter(Boolean);
+    let parentsLabel = '';
+    if (parentNames.length === 2){
+      parentsLabel = 'Fillo/a de ' + parentNames[0] + ' e ' + parentNames[1];
+    } else if (parentNames.length === 1){
+      parentsLabel = 'Fillo/a de ' + parentNames[0];
+    }
+    return {
+      name: p.n,
+      tronco: 'Tronco ' + p.f + ': ' + famLabel,
+      parentsLabel,
+    };
   }
 
   // ---------- autocomplete wiring ----------
@@ -370,9 +389,15 @@ const BALDRIZ_DATA = {"persons":{"I.1":{"n":"Marcos Moráis","f":"I","nt":""},"I
         const lbl = labelFor(id);
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.innerHTML = '<span class="sname"></span><span class="stronco"></span>';
+        btn.innerHTML = '<span class="sname"></span><span class="stronco"></span><span class="sparents"></span>';
         btn.querySelector('.sname').textContent = lbl.name;
         btn.querySelector('.stronco').textContent = lbl.tronco;
+        const parentsEl = btn.querySelector('.sparents');
+        if (lbl.parentsLabel){
+          parentsEl.textContent = lbl.parentsLabel;
+        } else {
+          parentsEl.remove();
+        }
         btn.addEventListener('click', () => pick(id));
         if (i === activeIdx) btn.classList.add('active');
         sugg.appendChild(btn);
