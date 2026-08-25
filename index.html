@@ -7113,7 +7113,8 @@ span.idx-dots { flex: 1; border-bottom: 1px dotted #b9b0a0; margin: 0 6px; heigh
       }
     }
 
-    function update(source){
+    function update(source, opts){
+      opts = opts || {};
       var nodes = root.descendants();
       var links = root.links();
       treeLayout(root);
@@ -7135,7 +7136,7 @@ span.idx-dots { flex: 1; border-bottom: 1px dotted #b9b0a0; margin: 0 6px; heigh
         .on('click', function(ev, d){
           if (d.children) { d._children = d.children; d.children = null; }
           else if (d._children) { d.children = d._children; d._children = null; }
-          update(d);
+          update(d, {fit: false});
         });
 
       nodeEnter.append('rect')
@@ -7232,7 +7233,9 @@ span.idx-dots { flex: 1; border-bottom: 1px dotted #b9b0a0; margin: 0 6px; heigh
 
       nodes.forEach(function(d){ d.x0 = d.x; d.y0 = d.y; });
 
-      fitToScreen(true, focusNode);
+      if (opts.fit !== false) {
+        fitToScreen(true, focusNode);
+      }
       if (focusNode) {
         var flashSel = gNodes.selectAll('g.tnode').filter(function(d){ return d === focusNode; });
         flashSel.classed('tflash', true);
