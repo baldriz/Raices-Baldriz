@@ -102,6 +102,22 @@ a { color: var(--link); }
 }
 #searchBox::placeholder { color: rgba(242,239,230,0.55); }
 .search-count { font-size: 12px; color: var(--brass); white-space: nowrap; }
+.search-subline {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 18px;
+  background: var(--ink);
+  border-top: 1px solid rgba(242,239,230,0.12);
+}
+.search-subline a {
+  color: var(--brass);
+  font-size: 12px;
+  text-decoration: none;
+}
+.search-subline a:hover { color: #f2efe6; text-decoration: underline; }
+@media (max-width: 640px) {
+  .search-subline { justify-content: center; }
+}
 
 /* Layout */
 .layout { display: flex; align-items: flex-start; }
@@ -744,6 +760,9 @@ span.idx-dots { flex: 1; border-bottom: 1px dotted #b9b0a0; margin: 0 6px; heigh
     <span id="searchCount" class="search-count"></span>
   </div>
 </header>
+<div class="search-subline">
+  <a href="parentesco.html">&#128269; Buscar parentesco entre dúas persoas</a>
+</div>
 <div class="layout">
 <nav id="sidebar" class="sidebar">
   <div class="sidebar-head">Troncos familiares <span class="sidebar-count">119</span></div>
